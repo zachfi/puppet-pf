@@ -1,0 +1,21 @@
+# --------------------
+# Filtering
+# --------------------
+
+set skip on lo0
+
+block in log
+
+pass out
+#pass out quick on $primary_if proto { tcp udp icmp ipv6-icmp } all
+
+#antispoof quick for { lo $primary_if }
+
+# ICMP for all interfaces
+pass in proto { icmp6 icmp } from any to any
+
+# ----------
+# World services
+# ----------
+pass in proto tcp to port 22
+

@@ -1,0 +1,9 @@
+# /etc/pf.conf: THIS FILE IS MANAGED BY PUPPET!
+
+# --------------------
+# Options
+# --------------------
+
+# See http://www.openbsd.org/faq/pf/options.html
+set optimization conservative
+
