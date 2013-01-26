@@ -4,7 +4,7 @@ define pf::table (
   $list
 ){
 
-  $table_line = inline_template("table <<%=name%>> { <%= list.join(' ') %> }")
+  $table_line = inline_template("table <<%=name%>> { <%= list.to_a.join(' ') %> }")
 
   concat::fragment { "PF Table: ${name}":
     order   => $order,
