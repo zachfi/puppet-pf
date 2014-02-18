@@ -1,76 +1,31 @@
 class pf (
-  $pfconf   = '/etc/pf.conf',
-  $pfdir    = '/etc/pf',
-  $sitename = hiera('sitename')
+  $template = undef,
+  $pfctl    = '/sbin/pfctl',
+  $tmpfile  = '/tmp/pf.conf',
+  $conf     = '/etc/pf.conf',
 ){
 
-  concat { $pfconf:
-    owner  => root,
-    group  => 0,
-    mode   => 640,
-    notify => Exec["reload_pf"],
-  }
+  if $template {
+    file { $tmpfile:
+      owner   => '0',
+      group   => '0',
+      mode    => '0600',
+      content => template($template),
+      notify  => Exec['pfctl_update'],
+    }
 
-  concat::fragment { "pf.conf_options":
-    order   => '01',
-    target  => $pfconf,
-    source => [
-      "puppet:///modules/${sitename}/etc/pf.conf.options.${fqdn}",
-      "puppet:///modules/pf/pf.conf.options"
-      ],
-  }
+    file { $conf:
+      owner   => '0',
+      group   => '0',
+      mode    => '0600',
+    }
 
-  concat::fragment { "pf.conf_macros":
-    order   => '03',
-    target  => $pfconf,
-    source => [
-      "puppet:///modules/${sitename}/etc/pf.conf.macros.${fqdn}",
-      "puppet:///modules/pf/pf.conf.macros"
-      ],
+    exec { 'pfctl_update':
+      command     => "${pfctl} -nf ${tmpfile} && cp ${tmpfile} ${conf} && ${pfctl} -f ${conf}",
+      unless      => "/usr/bin/diff ${tmpfile} ${conf}",
+      refreshonly => true,
+    }
+  } else {
+    warning('in order to apply PF rules, you must specify a config template')
   }
-
-  concat::fragment { "pf.conf_translation":
-    order   => '31',
-    target  => $pfconf,
-    source => [
-      "puppet:///modules/${sitename}/etc/pf.conf.translation.${fqdn}",
-      "puppet:///modules/pf/pf.conf.translation"
-      ],
-  }
-
-  concat::fragment { "pf.conf_tables":
-    order   => '41',
-    target  => $pfconf,
-    source => [
-      "puppet:///modules/${sitename}/etc/pf.conf.tables.${fqdn}",
-      "puppet:///modules/pf/pf.conf.tables"
-      ],
-  }
-
-  concat::fragment { "pf.conf_filtering":
-    order   => '51',
-    target  => $pfconf,
-    source => [
-      "puppet:///modules/${sitename}/etc/pf.conf.filtering.${fqdn}",
-      "puppet:///modules/pf/pf.conf.filtering"
-      ],
-  }
-
-  service { "pf":
-    enable  => true,
-    ensure  => running,
-    require => Concat[$pfconf],
-  }
-
-  service { "pflog":
-    enable => true,
-    ensure => running,
-  }
-
-  exec { "reload_pf":
-    path        => '/sbin',
-    command     => "pfctl -nf ${pfconf} && pfctl -f ${pfconf}",
-    refreshonly => true,
-  }
-
 }
