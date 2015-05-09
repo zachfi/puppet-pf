@@ -1,8 +1,12 @@
 class pf (
-  $template = undef,
-  $pfctl    = '/sbin/pfctl',
-  $tmpfile  = '/tmp/pf.conf',
-  $conf     = '/etc/pf.conf',
+  $template       = undef,
+  $pfctl          = '/sbin/pfctl',
+  $tmpfile        = '/tmp/pf.conf',
+  $conf           = '/etc/pf.conf',
+  $manage_service = true,
+  $service_ensure = true,
+  $service_enable = true,
+  $service_name   = 'pf',
 ){
 
   if $template {
@@ -15,9 +19,20 @@ class pf (
     }
 
     file { $conf:
-      owner   => '0',
-      group   => '0',
-      mode    => '0600',
+      ensure => 'file',
+      owner  => '0',
+      group  => '0',
+      mode   => '0600',
+    }
+
+    if $manage_service {
+      service { 'pf':
+        ensure  => $service_ensure,
+        enable  => $service_enable,
+        name    => $service_name,
+        require => File[$conf],
+        before  => Exec['pfctl_update'],
+      }
     }
 
     exec { 'pfctl_update':
