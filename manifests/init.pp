@@ -5,7 +5,7 @@ class pf (
   $conf           = '/etc/pf.conf',
   $manage_service = true,
   $service_ensure = true,
-  $service_enable = true,
+  $service_enable = 'running',
   $service_name   = 'pf',
 ){
 
