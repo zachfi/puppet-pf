@@ -3,11 +3,12 @@ class pf (
   $pfctl          = '/sbin/pfctl',
   $tmpfile        = '/tmp/pf.conf',
   $conf           = '/etc/pf.conf',
-  $manage_service = true,
-  $service_ensure = true,
-  $service_enable = 'running',
-  $service_name   = 'pf',
-){
+  $manage_service = $pf::manage_service,
+  $service_enable = $pf::service_enable
+) inherits pf::params {
+
+  validate_bool($manage_service)
+  validate_bool($service_enable)
 
   if $template {
     file { $tmpfile:
@@ -26,10 +27,17 @@ class pf (
     }
 
     if $manage_service {
+      case $service_enable {
+        true: {
+          $service_ensure = 'running'
+        }
+        false: {
+          $service_ensure = 'stopped'
+        }
+      }
       service { 'pf':
         ensure  => $service_ensure,
         enable  => $service_enable,
-        name    => $service_name,
         require => File[$conf],
         before  => Exec['pfctl_update'],
       }
