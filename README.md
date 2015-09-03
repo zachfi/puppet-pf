@@ -1,5 +1,7 @@
 # Puppet-pf
 
+[![Build Status](https://travis-ci.org/xaque208/puppet-pf.svg?branch=master)](https://travis-ci.org/xaque208/puppet-pf)
+
 A Puppet module for managing PF rules on BSD.  This module is pretty basic.
 It only wraps the logic necessary to deploy a `pf.conf` file and the necessary
 parsing and loading of the rules deployed.
