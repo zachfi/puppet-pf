@@ -36,5 +36,8 @@
   ],
   "description": "Manage the OpenBSD Packet Filtter with Puppet",
   "dependencies": [
+    {"name":"puppetlabs/concat","version_requirement":">=1.2.1"},
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.0.0" },
+    { "name": "dalen/puppetdbquery", "version_requirement": ">= 1.3.0" }
   ]
 }

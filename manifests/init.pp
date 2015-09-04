@@ -3,12 +3,28 @@ class pf (
   $pfctl          = '/sbin/pfctl',
   $tmpfile        = '/tmp/pf.conf',
   $conf           = '/etc/pf.conf',
+  $pf_d           = '/etc/pf.d',
   $manage_service = $pf::manage_service,
   $service_enable = $pf::service_enable
 ) inherits pf::params {
 
   validate_bool($manage_service)
   validate_bool($service_enable)
+
+  file { $pf_d:
+    ensure  => directory,
+    owner   => 'root',
+    group   => '0',
+    recurse => true,
+    purge   => true,
+  }
+
+  concat { "${pf_d}/tables.pf":
+    owner  => 'root',
+    group  => '0',
+    mode   => '0600',
+    notify => Exec['pfctl_update']
+  }
 
   if $template {
     file { $tmpfile:

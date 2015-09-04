@@ -54,6 +54,27 @@ the majority of your firewalls, you can do so with just a change to a single
 firewall.  Obviously, how this structure is laid out and the usefulness of
 doing so will be dependent on the environment within which PF is deploy.
 
-### Dynamic rules with PuppetDB
+### Dynamic tables with PuppetDB
 
-Coming soon.
+Tables in PF hold groups of addresses for speedy lookup and simplified rulesets.  This combined with PuppetDB queries
+ makes for some interesting code.  You can use the `pf::table` defined type to specify a list of classes, who's IP 
+ addresses should be in a table.
+ 
+```Puppet
+pf::table {'ldap_servers':
+    class_list => ['profile::ldap::servers'],
+}
+```
+
+The above code will all a PF table entry to `/etc/pf.d/tables.pf` that you can simply include in your main 
+template with a simple `include "/etc/pf.d/tables.pf`.  Now you can use the `<ldap_servers>` table in your rule set 
+like you would with any other PF table.
+
+This table is populated by querying PuppetDB for all nodes who have the class `profile::ldap::servers` in their 
+catalog, and returning returning the values for `ipaddress` and `ipaddress6` from those nodes, and adding them to the
+table.  This doesn't work for all scenarious, for example, if the IP you want to add to a table is not in either of 
+those facts.
+ 
+I'm expecting more to come in this area.
+ 
+
