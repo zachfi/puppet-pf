@@ -8,5 +8,8 @@ class pf::params {
       $manage_service = true
       $service_enable = true
     }
+    default: {
+      fail("${::kernel} is not supported")
+    }
   }
 }
