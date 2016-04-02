@@ -1,15 +1,12 @@
 class pf (
   $template       = undef,
-  $pfctl          = '/sbin/pfctl',
-  $tmpfile        = '/tmp/pf.conf',
-  $conf           = '/etc/pf.conf',
-  $pf_d           = '/etc/pf.d',
-  $manage_service = $pf::params::manage_service,
-  $service_enable = $pf::params::service_enable
+  String $pfctl          = '/sbin/pfctl',
+  String $tmpfile        = '/tmp/pf.conf',
+  String $conf           = '/etc/pf.conf',
+  String $pf_d           = '/etc/pf.d',
+  Boolean $manage_service = $pf::params::manage_service,
+  Boolean $service_enable = $pf::params::service_enable
 ) inherits pf::params {
-
-  validate_bool($manage_service)
-  validate_bool($service_enable)
 
   file { $pf_d:
     ensure  => directory,
@@ -43,14 +40,11 @@ class pf (
     }
 
     if $manage_service {
-      case $service_enable {
-        true: {
-          $service_ensure = 'running'
-        }
-        false: {
-          $service_ensure = 'stopped'
-        }
+      $service_ensure = $service_enable ? {
+        true  => 'running',
+        false => 'stopped',
       }
+
       service { 'pf':
         ensure  => $service_ensure,
         enable  => $service_enable,

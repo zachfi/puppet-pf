@@ -2,8 +2,8 @@
 #
 #
 define pf::table (
-  $class_list = undef,
-  $ip_list    = undef,
+  Array $class_list = [],
+  Array $ip_list    = [],
 ) {
 
   include pf

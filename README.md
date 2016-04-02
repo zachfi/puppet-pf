@@ -10,6 +10,8 @@ parsing and loading of the rules deployed.
 
 To use the PF module, you only need pass in a template.
 
+For Puppet 3.x support, use the module version 0.1.x.
+
 ### With Hiera
 
 If you are using Hiera, the following items will take care of you.
@@ -48,33 +50,37 @@ might look like the following.
 pass in on $ext_if proto tcp from $siteA_secondary_ext to $siteA_primary_ext port {isakmp}
 ```
 
-Now this allows you to put the bulk of the code in common templates that can be
-distributed to multiple systems.  This means that in order to make changes to
-the majority of your firewalls, you can do so with just a change to a single
-firewall.  Obviously, how this structure is laid out and the usefulness of
-doing so will be dependent on the environment within which PF is deploy.
+This allows you to put the bulk of the code in common templates that can be
+distributed to multiple systems, which helps reduce the number of files that
+need modifying to make change to a potential large number of systems.  This is
+environment *dependent*.
 
 ### Dynamic tables with PuppetDB
 
-Tables in PF hold groups of addresses for speedy lookup and simplified rulesets.  This combined with PuppetDB queries
- makes for some interesting code.  You can use the `pf::table` defined type to specify a list of classes, who's IP 
- addresses should be in a table.
- 
+Tables in PF hold groups of addresses for speedy lookup and simplified rule
+sets.  This combined with PuppetDB queries makes for some interesting code.
+You can use the `pf::table` defined type to specify a list of classes, who's IP
+addresses should be in a table.
+
 ```Puppet
 pf::table {'ldap_servers':
     class_list => ['profile::ldap::servers'],
 }
 ```
 
-The above code will all a PF table entry to `/etc/pf.d/tables.pf` that you can simply include in your main 
-template with a simple `include "/etc/pf.d/tables.pf`.  Now you can use the `<ldap_servers>` table in your rule set 
-like you would with any other PF table.
+The above code will all a PF table entry to `/etc/pf.d/tables.pf` that you can
+simply include in your main template with a simple `include
+"/etc/pf.d/tables.pf`.  Now you can use the `<ldap_servers>` table in your rule
+set like you would with any other PF table.
 
-This table is populated by querying PuppetDB for all nodes who have the class `profile::ldap::servers` in their 
-catalog, and returning returning the values for `ipaddress` and `ipaddress6` from those nodes, and adding them to the
-table.  This doesn't work for all scenarious, for example, if the IP you want to add to a table is not in either of 
-those facts.
- 
-I'm expecting more to come in this area.
- 
+```pf
+pass in proto { tcp udp } from <local_nets> to <auth_servers> port 88
+pass in proto tcp from <local_nets> to <auth_servers> port { 636 749 }
+```
+
+This table is populated by querying PuppetDB for all nodes who have the class
+`profile::ldap::servers` in their catalog, and returning returning the values
+for `ipaddress` and `ipaddress6` from those nodes, and adding them to the
+  table.  This doesn't work for all scenarios, for example, if the IP you want
+  to add to a table is not in either of those facts.
 
