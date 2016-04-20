@@ -4,8 +4,8 @@ class pf (
   $tmpfile        = '/tmp/pf.conf',
   $conf           = '/etc/pf.conf',
   $pf_d           = '/etc/pf.d',
-  $manage_service = $pf::manage_service,
-  $service_enable = $pf::service_enable
+  $manage_service = $pf::params::manage_service,
+  $service_enable = $pf::params::service_enable
 ) inherits pf::params {
 
   validate_bool($manage_service)
