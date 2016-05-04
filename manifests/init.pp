@@ -1,9 +1,9 @@
 class pf (
-  $template       = undef,
-  String $pfctl          = '/sbin/pfctl',
-  String $tmpfile        = '/tmp/pf.conf',
-  String $conf           = '/etc/pf.conf',
-  String $pf_d           = '/etc/pf.d',
+  $template               = undef,
+  String $pfctl           = '/sbin/pfctl',
+  String $tmpfile         = '/tmp/pf.conf',
+  String $conf            = '/etc/pf.conf',
+  String $pf_d            = '/etc/pf.d',
   Boolean $manage_service = $pf::params::manage_service,
   Boolean $service_enable = $pf::params::service_enable
 ) inherits pf::params {
@@ -17,6 +17,13 @@ class pf (
   }
 
   concat { "${pf_d}/tables.pf":
+    owner  => 'root',
+    group  => '0',
+    mode   => '0600',
+    notify => Exec['pfctl_update']
+  }
+
+  concat { "${pf_d}/macros.pf":
     owner  => 'root',
     group  => '0',
     mode   => '0600',
