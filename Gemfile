@@ -13,3 +13,7 @@ group :test do
   gem "rspec-puppet-facts"
 end
 
+
+group :development do
+  gem "puppet-blacksmith"
+end
