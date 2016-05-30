@@ -8,29 +8,29 @@ class pf (
   Boolean $service_enable = $pf::params::service_enable
 ) inherits pf::params {
 
-  file { $pf_d:
-    ensure  => directory,
-    owner   => 'root',
-    group   => '0',
-    recurse => true,
-    purge   => true,
-  }
-
-  concat { "${pf_d}/tables.pf":
-    owner  => 'root',
-    group  => '0',
-    mode   => '0600',
-    notify => Exec['pfctl_update']
-  }
-
-  concat { "${pf_d}/macros.pf":
-    owner  => 'root',
-    group  => '0',
-    mode   => '0600',
-    notify => Exec['pfctl_update']
-  }
-
   if $template {
+    file { $pf_d:
+      ensure  => directory,
+      owner   => 'root',
+      group   => '0',
+      recurse => true,
+      purge   => true,
+    }
+
+    concat { "${pf_d}/tables.pf":
+      owner  => 'root',
+      group  => '0',
+      mode   => '0600',
+      notify => Exec['pfctl_update']
+    }
+
+    concat { "${pf_d}/macros.pf":
+      owner  => 'root',
+      group  => '0',
+      mode   => '0600',
+      notify => Exec['pfctl_update']
+    }
+
     file { $tmpfile:
       owner   => '0',
       group   => '0',
