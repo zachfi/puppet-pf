@@ -6,7 +6,7 @@ define pf::table (
   Array $ip_list    = [],
 ) {
 
-  include pf
+  include ::pf
 
   if $class_list {
     $class_ip_list = get_class_ip_list($class_list)

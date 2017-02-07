@@ -8,7 +8,7 @@ define pf::macro (
   String $key = $name,
 ) {
 
-  include pf
+  include ::pf
 
   concat::fragment { "${name}.pf":
     target  => "${pf::pf_d}/macros.pf",
