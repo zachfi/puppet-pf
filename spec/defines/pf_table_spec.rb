@@ -1,24 +1,11 @@
 require 'spec_helper'
 
 describe 'pf::table' do
-  context 'on OpenBSD' do
-    let(:facts) { {
-        :kernel => 'OpenBSD',
-        :concat_basedir => '/dne'
-    } }
-    let(:title) { 'web_servers' }
-    it { should contain_concat__fragment('/etc/pf.d/tables/web_servers.pf').with(:content=>/table <web_servers> {/) }
-
-  end
-
-  context 'on FreeBSD' do
-    let(:facts) { {
-        :kernel => 'FreeBSD',
-        :concat_basedir => '/dne'
-    } }
-    let(:title) { 'web_servers' }
-    it { should contain_concat__fragment('/etc/pf.d/tables/web_servers.pf').with(:content=>/table <web_servers> {/) }
-
+  let(:title) { 'web_servers' }
+  on_supported_os.each do |os, facts|
+    let(:facts) { facts }
+    context "on #{os}" do
+      it { is_expected.to contain_concat__fragment('/etc/pf.d/tables/web_servers.pf').with(content: %r{table <web_servers> \{}) }
+    end
   end
 end
-
