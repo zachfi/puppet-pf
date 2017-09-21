@@ -2,9 +2,9 @@
 #
 #
 define pf::table (
-  Array $class_list     = [],
-  Array $ip_list        = [],
-  Array $interface_name = []
+  Array $class_list                = [],
+  Array $ip_list                   = [],
+  Optional[String] $interface_name = undef
 ) {
 
   include ::pf
