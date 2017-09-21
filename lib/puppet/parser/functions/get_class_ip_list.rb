@@ -1,9 +1,10 @@
 module Puppet::Parser::Functions
   newfunction(:get_class_ip_list,
-              arity: 1,
+              arity: -2,
               type: :rvalue) do |args|
 
     class_list = args.shift
+    interface_name = args.shift
 
     def self.normalize_class_names(names)
       Array(names).each do |c|
@@ -24,7 +25,14 @@ module Puppet::Parser::Functions
     ip_list = []
     normalize_class_names(class_list) do |c|
       query = "Class[#{c}]"
-      facts = %w(ipaddress ipaddress6)
+      facts = if interface_name
+                %w(ipaddress ipaddress6)
+              else
+                [
+                  "#{interface_name}_ipaddress",
+                  "#{interface_name}_ipaddress6"
+                ]
+              end
       get_fact_values(query, facts) do |v|
         Puppet.debug("get_class_ip_list(): #{v}")
         ip_list << v
