@@ -26,12 +26,12 @@ module Puppet::Parser::Functions
     normalize_class_names(class_list) do |c|
       query = "Class[#{c}]"
       facts = if interface_name
-                %w(ipaddress ipaddress6)
-              else
                 [
                   "#{interface_name}_ipaddress",
                   "#{interface_name}_ipaddress6"
                 ]
+              else
+                %w(ipaddress ipaddress6)
               end
       get_fact_values(query, facts) do |v|
         Puppet.debug("get_class_ip_list(): #{v}")
