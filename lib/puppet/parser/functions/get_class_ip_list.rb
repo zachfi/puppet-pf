@@ -31,6 +31,6 @@ module Puppet::Parser::Functions
       end
     end
 
-    ip_list.sort.reject { |i| i.nil? || i == '' }.uniq
+    ip_list.sort.reject { |i| i.nil? || i == '' || i == :undef }.uniq
   end
 end
