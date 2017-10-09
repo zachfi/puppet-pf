@@ -84,3 +84,29 @@ for `ipaddress` and `ipaddress6` from those nodes, and adding them to the
   table.  This doesn't work for all scenarios, for example, if the IP you want
   to add to a table is not in either of those facts.
 
+#### More flexible table data using a common class
+
+In the case where a node's `ipaddress` or `ipaddress6` is not the desired value
+to enter a table, this data can be referenced from another class.  Consider the following resources
+
+``` Puppet
+class profile::network::host ($default_address) {}
+
+pf::table {'ldap_servers':
+    class_list         => ['profile::ldap::servers'],
+    common_class       => 'profile::network::host',
+    common_class_param => 'default_address'
+}
+```
+
+In this case, the `profile::network::host::default_address` can be set in
+hiera, on a specific node.  This will cause the `pf::table` resource to first
+look for nodes that have included the `profile::ldap::servers` class, then from
+each of those nodes, look up the value of `default_address` on the
+`profile::network::host` class.  This allows the `default_address` to be
+overridden with something more creative, like an array of facts like
+`[networking.lo1.ip6, networking.lo1.ip4]` or some such.  This comes in quite
+handy when nodes in the environment wish to be referenced by a fact that is not
+the `ipaddress` or `ipaddress6` fact.
+
+

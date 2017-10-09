@@ -1,14 +1,15 @@
 module Puppet::Parser::Functions
   newfunction(:get_class_ip_list,
-              arity: 1,
+              arity: 2,
               type: :rvalue) do |args|
 
     class_list = args.shift
+    facts_list = args.shift
 
     def self.normalize_class_names(names)
-      Array(names).each do |c|
+      Array(names).map do |c|
         # We need to get the class names in the correct capitalization
-        yield c.split('::').map(&:capitalize).join('::')
+        c.split('::').map(&:capitalize).join('::')
       end
     end
 
@@ -24,7 +25,7 @@ module Puppet::Parser::Functions
     ip_list = []
     normalize_class_names(class_list) do |c|
       query = "Class[#{c}]"
-      facts = %w(ipaddress ipaddress6)
+      facts = facts_list ? facts_list : %w(ipaddress ipaddress6)
       get_fact_values(query, facts) do |v|
         Puppet.debug("get_class_ip_list(): #{v}")
         ip_list << v
