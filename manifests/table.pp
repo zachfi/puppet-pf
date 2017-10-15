@@ -28,7 +28,7 @@ define pf::table (
 
   include ::pf
 
-   if $class_list.size > 0 {
+  if $class_list.size > 0 {
     if $common_class and $common_class_param {
       $class_ip_list = get_common_class_param_value_list(
         $class_list,

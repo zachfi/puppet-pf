@@ -17,14 +17,14 @@ module Puppet::Parser::Functions
     def get_class_values(query, node_filter)
       Puppet.debug("retrieving class values for #{query} filter #{node_filter}")
       results = function_query_resources([
-        node_filter,
-        query,
-        false
-      ])
+                                           node_filter,
+                                           query,
+                                           false
+                                         ])
       # The results come back as a single item array, so it looks
-      results.each{|i|
+      results.each do |i|
         yield i['parameters']
-      }
+      end
     end
 
     ip_list = []
