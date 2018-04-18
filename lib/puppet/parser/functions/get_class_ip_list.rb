@@ -25,7 +25,7 @@ module Puppet::Parser::Functions
     ip_list = []
     normalize_class_names(class_list) do |c|
       query = "Class[#{c}]"
-      facts = facts_list ? facts_list : %w(ipaddress ipaddress6)
+      facts = facts_list ? facts_list : %w[ipaddress ipaddress6]
       get_fact_values(query, facts) do |v|
         Puppet.debug("get_class_ip_list(): #{v}")
         ip_list << v
