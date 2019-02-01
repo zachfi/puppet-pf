@@ -1,0 +1,5 @@
+table <<%= $table_name %>> {
+    <% $final_ip_list.sort.each |$i| { -%>
+    <%= $i %>
+    <% } -%>
+    }
