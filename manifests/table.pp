@@ -49,6 +49,9 @@ define pf::table (
 
   concat::fragment { "/etc/pf.d/tables/${name}.pf":
     target  => "${pf::pf_d}/tables.pf",
-    content => template('pf/table.erb'),
+    content => epp('pf/table.epp',{
+      'table_name'    => $name,
+      'final_ip_list' => $final_ip_list,
+      }),
   }
 }

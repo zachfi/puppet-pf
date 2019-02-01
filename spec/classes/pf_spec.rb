@@ -4,7 +4,7 @@ describe 'pf' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) { facts }
-      let(:params) { { template: 'pf/default.erb' } }
+      let(:params) { { template: 'pf/default.epp' } }
 
       case facts[:kernel]
       when 'OpenBSD'
