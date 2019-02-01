@@ -10,6 +10,11 @@ class pf (
 ) {
 
   if $template {
+
+    $default_params = {
+      'pf_d' => $pf_d,
+    }
+
     file { $pf_d:
       ensure  => directory,
       owner   => 'root',
@@ -36,7 +41,7 @@ class pf (
       owner   => '0',
       group   => '0',
       mode    => '0600',
-      content => epp($template, $template_params),
+      content => epp($template, $default_params.merge($template_params)),
       notify  => Exec['pfctl_update'],
     }
 
