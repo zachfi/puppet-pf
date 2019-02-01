@@ -2,6 +2,7 @@ class pf (
   Boolean $manage_service,
   Boolean $service_enable,
   Optional[String] $template = undef,
+  Hash $template_params      = {},
   String $pfctl              = '/sbin/pfctl',
   String $tmpfile            = '/tmp/pf.conf',
   String $conf               = '/etc/pf.conf',
@@ -35,7 +36,7 @@ class pf (
       owner   => '0',
       group   => '0',
       mode    => '0600',
-      content => template($template),
+      content => epp($template, $template_params),
       notify  => Exec['pfctl_update'],
     }
 
