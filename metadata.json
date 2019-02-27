@@ -1,6 +1,6 @@
 {
   "name": "zleslie-pf",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "author": "zleslie",
   "summary": "Manage PF with Puppet",
   "license": "Apache-2.0",
