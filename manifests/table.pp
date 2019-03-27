@@ -26,7 +26,7 @@ define pf::table (
   # an appropriate use.  Perhaps a rename here would simply make query results
   # more powerful, and perhaps more understandable.
 
-  include ::pf
+  include pf
 
   if $class_list.size > 0 {
     if $common_class and $common_class_param {
