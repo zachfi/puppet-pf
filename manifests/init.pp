@@ -67,7 +67,7 @@ class pf (
     }
 
     exec { 'pfctl_update':
-      command     => "${pfctl} -nf ${tmpfile} && cp ${tmpfile} ${conf} && ${pfctl} -f ${conf}",
+      command     => "${pfctl} -nf ${tmpfile} && cp ${tmpfile} ${conf} && ${pfctl} -F rules -F Tables -f ${conf}",
       unless      => "/usr/bin/diff ${tmpfile} ${conf}",
       refreshonly => true,
     }

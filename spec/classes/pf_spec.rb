@@ -14,7 +14,7 @@ describe 'pf' do
         it { is_expected.to contain_file('/etc/pf.d').with(ensure: 'directory') }
         it { is_expected.to contain_concat('/etc/pf.d/tables.pf') }
         it { is_expected.to contain_file('/tmp/pf.conf') }
-        it { is_expected.to contain_exec('pfctl_update').with(command: '/sbin/pfctl -nf /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && /sbin/pfctl -f /etc/pf.conf') }
+        it { is_expected.to contain_exec('pfctl_update').with(command: '/sbin/pfctl -nf /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && /sbin/pfctl -F rules -F Tables -f /etc/pf.conf') }
       when 'FreeBSD'
         it { is_expected.to contain_class('pf') }
         it { is_expected.to contain_service('pf') }
@@ -22,7 +22,7 @@ describe 'pf' do
         it { is_expected.to contain_file('/etc/pf.d').with(ensure: 'directory') }
         it { is_expected.to contain_concat('/etc/pf.d/tables.pf') }
         it { is_expected.to contain_file('/tmp/pf.conf') }
-        it { is_expected.to contain_exec('pfctl_update').with(command: '/sbin/pfctl -nf /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && /sbin/pfctl -f /etc/pf.conf') }
+        it { is_expected.to contain_exec('pfctl_update').with(command: '/sbin/pfctl -nf /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && /sbin/pfctl -F rules -F Tables -f /etc/pf.conf') }
       end
     end
   end
