@@ -14,9 +14,9 @@
 #
 
 define pf::table (
-  Array $class_list                    = [],
-  Array $ip_list                       = [],
-  Array $fact_list                     = [],
+  Array[String] $class_list            = [],
+  Array[String] $ip_list               = [],
+  Array[String] $fact_list             = [],
   Optional[String] $common_class       = undef,
   Optional[String] $common_class_param = undef,
 ) {
@@ -30,16 +30,16 @@ define pf::table (
 
   if $class_list.size > 0 {
     if $common_class and $common_class_param {
-      $class_ip_list = get_common_class_param_value_list(
+      $class_ip_list = pf::common_class_param_value_list(
         $class_list,
         $common_class,
         $common_class_param
       )
     } else {
       if $fact_list {
-        $class_ip_list = get_class_ip_list($class_list, $fact_list)
+        $class_ip_list = pf::class_ip_list($class_list, $fact_list)
       } else {
-        $class_ip_list = get_class_ip_list($class_list)
+        $class_ip_list = pf::class_ip_list($class_list)
       }
     }
     $final_ip_list = concat($class_ip_list, $ip_list)
