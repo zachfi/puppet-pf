@@ -3,7 +3,6 @@ function pf::common_class_param_value_list(
   String $common_class       = '',
   String $common_class_param = '',
 ) {
-
   pf::normalize_class_names($class_list).map |$c| {
     $nodes_query = "nodes {
       resources {

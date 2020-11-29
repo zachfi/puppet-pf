@@ -8,9 +8,7 @@ class pf (
   String $conf               = '/etc/pf.conf',
   String $pf_d               = '/etc/pf.d',
 ) {
-
   if $template {
-
     $default_params = {
       'pf_d' => $pf_d,
     }
