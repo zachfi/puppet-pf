@@ -51,7 +51,7 @@ define pf::table (
     target  => "${pf::pf_d}/tables.pf",
     content => epp('pf/table.epp',{
       'table_name'    => $name,
-      'final_ip_list' => $final_ip_list,
+      'ip_list' => $final_ip_list,
       }),
   }
 }

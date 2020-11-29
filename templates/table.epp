@@ -1,5 +1,5 @@
 table <<%= $table_name %>> {
-    <% $final_ip_list.sort.unique.each |$i| { -%>
+    <% $ip_list.sort.unique.each |$i| { -%>
     <%= $i %>
     <% } -%>
     }

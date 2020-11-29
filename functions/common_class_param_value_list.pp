@@ -4,14 +4,25 @@ function pf::common_class_param_value_list(
   String $common_class_param = '',
 ) {
 
-  $common_class_query = "Class[\"${common_class}\"]"
+  # TODO use the $common_class variable for the resources, but use the
+  # $class_list below to filter nodes down.  We want the data from the
+  # common_class, but we want the $class_list to filter down the nodes.
 
   pf::normalize_class_names($class_list).map |$c| {
-    $node_filter = "Class[\"${c}\"]"
+    $nodes_query = "nodes {
+      resources {
+        type = 'Class' and title = '${c}'
+      }
+    }"
 
-    pf::class_values($node_filter, $common_class_query).map |$p| {
-      $p[$common_class_param]
+    $resources_query = "resources {
+      type = 'Class'
+      and title = '${common_class}'
+      and ${nodes_query}
+    }"
+
+    puppetdb_query($resources_query).map |$x| {
+      $x['parameters'][$common_class_param]
     }
-  }.flatten.unique.sort
-
+  }.flatten.delete_undef_values.unique.sort
 }
