@@ -7,7 +7,6 @@ define pf::macro (
   String $value,
   String $key = $name,
 ) {
-
   include pf
 
   concat::fragment { "${name}.pf":
@@ -15,4 +14,3 @@ define pf::macro (
     content => "${key} = ${value}\n",
   }
 }
-
