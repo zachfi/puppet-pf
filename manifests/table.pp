@@ -20,7 +20,6 @@ define pf::table (
   Optional[String] $common_class       = undef,
   Optional[String] $common_class_param = undef,
 ) {
-
   # TODO should class_list be called node_filter?  This might make it easier to
   # filter the nodes that we want, and it looks like a list of classes is still
   # an appropriate use.  Perhaps a rename here would simply make query results
@@ -50,8 +49,8 @@ define pf::table (
   concat::fragment { "/etc/pf.d/tables/${name}.pf":
     target  => "${pf::pf_d}/tables.pf",
     content => epp('pf/table.epp',{
-      'table_name'    => $name,
-      'ip_list' => $final_ip_list,
-      }),
+        'table_name' => $name,
+        'ip_list'    => $final_ip_list,
+    }),
   }
 }
